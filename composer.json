@@ -1,0 +1,27 @@
+{
+   "name": "skylarkelty/purity5",
+   "description": "Purity5 is a HTML5 parser, with a similar interface to SimpleXML",
+   "type": "library",
+   "keywords": [
+      "html5",
+      "parser"
+   ],
+   "homepage": "https://github.com/SkylarKelty/Purity5",
+   "license": "Apache License v2.0",
+   "authors": [{
+      "name": "Skylar Tristan Kelty",
+      "email": "skylarkelty@gmail.com",
+      "role": "lead"
+   }],
+   "require": {
+      "php": ">=5.3"
+   },
+   "require-dev": {
+      "phpunit/phpunit": "3.7.*"
+   },
+   "autoload": {
+      "psr-0": {
+         "SkylarK": ["src/"]
+      }
+   }
+}
