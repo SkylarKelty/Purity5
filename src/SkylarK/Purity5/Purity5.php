@@ -22,6 +22,8 @@ class Purity5
 	 * Parse a HTML document and return a query function
 	 */
 	public static function parse($markup) {
+		$parser = new Parser($markup);
+		
 		return function($query) {
 			return "Welcome";
 		};
