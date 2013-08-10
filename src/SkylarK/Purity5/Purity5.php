@@ -18,4 +18,12 @@ namespace SkylarK\Purity5;
  */
 class Purity5
 {
+	/**
+	 * Parse a HTML document and return a query function
+	 */
+	public static function parse($markup) {
+		return function($query) {
+			return "Welcome";
+		};
+	}
 }
