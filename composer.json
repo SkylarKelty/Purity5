@@ -1,6 +1,6 @@
 {
    "name": "skylarkelty/purity5",
-   "description": "Purity5 is a HTML5 parser, with a similar interface to SimpleXML",
+   "description": "Purity5 is a HTML5 parser, with a similar interface to jQuery",
    "type": "library",
    "keywords": [
       "html5",
