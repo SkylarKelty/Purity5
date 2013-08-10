@@ -19,6 +19,6 @@ class Parser
 	 */
 	public function __construct($html) {
 		$this->_html = $html;
-		$this->_document = new DataStructures\PureTree();
+		//$this->_document = new DataStructures\PureTree();
 	}
 }

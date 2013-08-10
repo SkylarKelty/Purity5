@@ -8,6 +8,7 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 		
 		$root = new SkylarK\Purity5\DataStructures\PureTree("html", array());
 
-		//$this->assertEquals("Welcome", $func("title"));
+		$this->assertEquals("html", $root->name());
+		$this->assertEquals(0, count($root->attributes()));
 	}
 }
