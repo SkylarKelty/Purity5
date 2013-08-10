@@ -13,13 +13,23 @@ class PureTree
 	private $_name;
 	/** Attributes of this node */
 	private $_attributes;
+	/** The contents of this node */
+	private $_contents;
+	/** Children of this node */
+	private $_children;
 
 	/**
 	 * Construct a new tree
+	 * 
+	 * @param string $name The name of this element
+	 * @param array $attributes A list of our attributes
+	 * @param string $contents the HTML contents of this element
 	 */
-	public function __construct($name, $attributes) {
+	public function __construct($name, $attributes, $contents) {
 		$this->_name = $name;
 		$this->_attributes = $attributes;
+		$this->_contents = $contents;
+		$this->_children = array();
 	}
 
 	/**
@@ -34,5 +44,28 @@ class PureTree
 	 */
 	public function attributes() {
 		return $this->_attributes;
+	}
+
+	/**
+	 * Return the contents of this element
+	 */
+	public function contents() {
+		return $this->_contents;
+	}
+
+	/**
+	 * Returns our children
+	 */
+	public function children() {
+		return $this->_children;
+	}
+
+	/**
+	 * Add a new child
+	 * 
+	 * @param PureTree $child The child to add
+	 */
+	public function addChild(PureTree $child) {
+		$this->_children[] = $child;
 	}
 }
