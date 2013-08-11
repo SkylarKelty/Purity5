@@ -102,7 +102,7 @@ class Query
 			// Cut down the matchDirectory
 			$matchDirectory = array_slice($matchDirectory, $match + 1);
 		}
-		return true;
+		return count($matchDirectory) === 0;
 	}
 
 	/**

@@ -43,7 +43,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue($result);
 
 		$result = $query->call("matchPath", array(array("head"), array("html", "head", "title")));
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 
 		$result = $query->call("matchPath", array(array("html", "title"), array("html", "head", "title")));
 		$this->assertTrue($result);
@@ -51,10 +51,10 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$result = $query->call("matchPath", array(array("html", ">", "title"), array("html", "head", "title")));
 		$this->assertFalse($result);
 
-		$result = $query->call("matchPath", array(array("html", ">", "head"), array("html", "head", "title")));
+		$result = $query->call("matchPath", array(array("html", ">", "head"), array("html", "head")));
 		$this->assertTrue($result);
 
-		$result = $query->call("matchPath", array(array("html", "title"), array("root", "second", "html", "title", "level")));
+		$result = $query->call("matchPath", array(array("html", "title"), array("root", "second", "html", "title")));
 		$this->assertTrue($result);
 
 		$result = $query->call("matchPath", array(array("html", "title"), array("root", "second", "html", "level", "title")));
