@@ -47,7 +47,7 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($title, $result);
 
 		// More complex query
-		/*$result = $root->query("html > head > title");
+		$result = $root->query("html > head > title");
 		$this->assertEquals(1, count($result));
 		$this->assertEquals($title, $result);
 
@@ -77,6 +77,6 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 
 		// Test the '+' priorities
 		$result = $root->query("h1 + p");
-		$this->assertEquals($p1, $result);*/
+		//$this->assertEquals($p1, $result);
 	}
 }

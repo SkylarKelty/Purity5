@@ -95,21 +95,29 @@ class Query
 	private function _run($tree, $path) {
 		$resultSet = $this->search($tree, array_shift($path));
 
+		$matchMode = 0;
 		while (!empty($path)) {
 			$query = array_shift($path);
 			switch ($query) {
 				case '+':
 					break;
 				case '>':
+					$matchMode = 1;
 					break;
 				default:
 					$searchSet = $resultSet;
 					$resultSet = array();
 					foreach ($searchSet as $elem) {
 						foreach ($elem->children() as $child) {
-							$resultSet = array_merge($resultSet, $this->search($child, $query));
+							if ($matchMode == 0) {
+								$resultSet = array_merge($resultSet, $this->search($child, $query));
+							}
+							if ($matchMode == 1 && $this->match($child, $query)) {
+								$resultSet[] = $child;
+							}
 						}
 					}
+					$matchMode = 0;
 			}
 		}
 
