@@ -5,15 +5,12 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	// Tests
 
 	public function test_SimpleParse() {
+		$body_contents = '<h1>Heading</h1><p>Welcome to Purity5!</p><img/>';
 		$html = '<html>
 			<head>
 				<title>Welcome</title>
 			</head>
-			<body>
-				<h1>Heading</h1>
-				<p>Welcome to Purity5!</p>
-				<img/>
-			</body>
+			<body>'.$body_contents.'</body>
 		</html>';
 		$html_contents = substr($html, 6, -7);
 		
@@ -29,6 +26,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals("head", $head->name());
 		$body = $children[1];
 		$this->assertEquals("body", $body->name());
+		$this->assertEquals($body_contents, $body->contents());
 
 		// Check the head
 		$head_children = $head->children();
