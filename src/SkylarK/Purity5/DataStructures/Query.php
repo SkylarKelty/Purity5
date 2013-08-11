@@ -71,14 +71,26 @@ class Query
 	/**
 	 * Match two paths, if the first path appears anywhere in the second path
 	 */
-	protected function matchPath($path, $directory) {
-		$matchDirectory = $directory;
+	protected function matchPath($tree) {
+		$path = $this->_query_path;
+		$matchDirectory = $tree->path();
+
 		$depth = 0;
-		foreach ($path as $elem) {
+		$ignoreCount = 0;
+		foreach ($path as $i => $elem) {
+			// Are we currently ignoring elements?
+			if ($ignoreCount > 0) {
+				$ignoreCount--;
+				continue;
+			}
+
+			// Setting depth?
 			if ($elem == '>') {
 				$depth = 1;
 				continue;
 			}
+
+			// Well... this didnt work.
 			if (empty($matchDirectory)) {
 				return false;
 			}
@@ -93,16 +105,35 @@ class Query
 				continue;
 			}
 
+			// Look ahead, is there a plus?
+			$plusMatch = false;
+			if (isset($path[$i + 1]) && $path[$i + 1] == '+') {
+				// Expect another
+				if (!isset($path[$i + 2])) {
+					throw new Exception("Invalid query, + encountered with no counter element");
+				}
+				$plusMatch = $elem;
+				$elem = $path[$i + 2];
+				$ignoreCount = 2;
+			}
+
 			// Go through $matchDirectory and see if our element matches
 			$match = array_search($elem, $matchDirectory);
 			if ($match === false) {
 				return false;
 			}
 
+			// Are we plus matching?
+			if ($plusMatch !== false) {
+				// Validate the match
+				
+			}
+
 			// Cut down the matchDirectory
 			$matchDirectory = array_slice($matchDirectory, $match + 1);
 		}
-		return count($matchDirectory) === 0;
+
+		return empty($matchDirectory);
 	}
 
 	/**
@@ -113,9 +144,6 @@ class Query
 	 * @return boolean        The result (true if there was a match)
 	 */
 	public function match(PureTree $tree) {
-		$name = $tree->name();
-		$attributes = $tree->attributes();
-		$path = $tree->path();
-		return $this->_query == $name || $this->_query_path == $path || $this->matchPath($this->_query_path, $path);
+		return $this->_query == $tree->name() || $this->_query_path == $tree->path() || $this->matchPath($tree);
 	}
 }
