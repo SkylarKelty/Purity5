@@ -19,5 +19,8 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$doc = $obj->getDocument();
 
 		$this->assertEquals("html", $doc->name());
+		$children = $doc->children();
+		$head = $children[0];
+		$this->assertEquals("head", $head->name());
 	}
 }

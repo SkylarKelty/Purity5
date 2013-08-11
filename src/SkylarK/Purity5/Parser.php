@@ -72,11 +72,16 @@ class Parser
 				}
 				if ($chr == '>' || $chr == '/') {
 					// Close the tag buffer
-					$buffer_in_tag = false;
-					$buffer_in_tag_name = false;
 					if (!$this->_document) {
 						$this->_document = PureTree::buildRoot($buffer_tag_name, $buffer_attrs);
+					} else {
+						$this->_document->createChild($buffer_tag_name, $buffer_attrs);
 					}
+					// Reset buffers
+					$buffer_in_tag = false;
+					$buffer_in_tag_name = false;
+					$buffer_tag_name = '';
+					$buffer_attrs = array();
 					continue;
 				}
 				$buffer_tag_name .= $chr;
