@@ -47,13 +47,13 @@ class Query
 		for ($i = 0; $i < $len; $i++) {
 			$chr = $query[$i];
 			// Split by > and whitespace
-			if ($chr == '>' || $chr == ' ') {
+			if ($chr == '>' || $chr == '+' || $chr == ' ') {
 				if ($buffer !== '') {
 					$result[] = $buffer;
 					$buffer = '';
 				}
-				if ($chr == '>') {
-					$result[] = '>';
+				if ($chr != ' ') {
+					$result[] = $chr;
 				}
 				continue;
 			}
