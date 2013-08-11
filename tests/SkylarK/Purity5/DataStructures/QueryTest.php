@@ -21,16 +21,16 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("html");
 
 		$result = $query->call("breakPath", array("html > title"));
-		$this->assertEquals(array("html", "title"), $result);
+		$this->assertEquals(array("html", ">", "title"), $result);
 
 		$result = $query->call("breakPath", array("html title"));
 		$this->assertEquals(array("html", "title"), $result);
 
 		$result = $query->call("breakPath", array("html>title"));
-		$this->assertEquals(array("html", "title"), $result);
+		$this->assertEquals(array("html", ">", "title"), $result);
 
 		$result = $query->call("breakPath", array("html> title"));
-		$this->assertEquals(array("html", "title"), $result);
+		$this->assertEquals(array("html", ">", "title"), $result);
 	}
 
 	public function test_MatchPath() {
@@ -39,7 +39,13 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$result = $query->call("matchPath", array(array("html", "title"), array("html", "title")));
 		$this->assertTrue($result);
 
-		$result = $query->call("matchPath", array(array("html", "title"), array("root", "html", "title")));
+		$result = $query->call("matchPath", array(array("html", "title"), array("html", "head", "title")));
+		$this->assertTrue($result);
+
+		$result = $query->call("matchPath", array(array("html", ">", "title"), array("html", "head", "title")));
+		$this->assertFalse($result);
+
+		$result = $query->call("matchPath", array(array("html", ">", "head"), array("html", "head", "title")));
 		$this->assertTrue($result);
 
 		$result = $query->call("matchPath", array(array("html", "title"), array("root", "second", "html", "title", "level")));

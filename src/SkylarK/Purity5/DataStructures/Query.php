@@ -52,6 +52,9 @@ class Query
 					$result[] = $buffer;
 					$buffer = '';
 				}
+				if ($chr == '>') {
+					$result[] = '>';
+				}
 				continue;
 			}
 			$buffer .= $chr;
@@ -70,13 +73,32 @@ class Query
 	 */
 	protected function matchPath($path, $directory) {
 		$matchDirectory = $directory;
+		$depth = 0;
 		foreach ($path as $elem) {
-			$matched = false;
+			if ($elem == '>') {
+				$depth = 1;
+				continue;
+			}
+			if (empty($matchDirectory)) {
+				return false;
+			}
+
+			// If we are only looking at depth 1, we can bail out early
+			if ($depth == 1) {
+				if ($matchDirectory[0] != $elem) {
+					return false;
+				}
+				$depth = 0;
+				$matchDirectory = array_slice($matchDirectory, 1);
+				continue;
+			}
+
 			// Go through $matchDirectory and see if our element matches
 			$match = array_search($elem, $matchDirectory);
 			if ($match === false) {
 				return false;
 			}
+
 			// Cut down the matchDirectory
 			$matchDirectory = array_slice($matchDirectory, $match + 1);
 		}
