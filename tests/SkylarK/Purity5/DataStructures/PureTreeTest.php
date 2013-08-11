@@ -35,17 +35,17 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 
 		// Another query
 		$result = $root->query("html head title");
-		//$this->assertEquals(1, count($result));
-		//$this->assertEquals($c2, $result[0]);
+		$this->assertEquals(1, count($result));
+		$this->assertEquals($c2, $result[0]);
 
 		// Another query
 		$result = $root->query("html title");
-		//$this->assertEquals(1, count($result));
-		//$this->assertEquals($c2, $result[0]);
+		$this->assertEquals(1, count($result));
+		$this->assertEquals($c2, $result[0]);
 
 		// Another query
 		$result = $root->query("head > title");
-		//$this->assertEquals(1, count($result));
-		//$this->assertEquals($c2, $result[0]);
+		$this->assertEquals(1, count($result));
+		$this->assertEquals($c2, $result[0]);
 	}
 }

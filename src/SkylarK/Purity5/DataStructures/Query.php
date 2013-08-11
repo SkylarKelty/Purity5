@@ -96,6 +96,6 @@ class Query
 		$path = $tree->path();
 		$bPath = $this->breakPath($path);
 
-		return $this->_query == $name || $this->_query == $path;
+		return $this->_query == $name || $this->_query == $path || $this->matchPath($this->_query_path, $bPath);
 	}
 }
