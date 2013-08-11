@@ -36,23 +36,9 @@ class Parser
 	 * Parse the HTML
 	 */
 	protected function parse() {
-		// Generic buffers
-		$buffer = '';
+		// Buffers
 		$buffer_parent = $this->_document;
-		$buffer_in_string = false;
-
-		// Buffers for tag processing
-		$buffer_tag = '';
-		$buffer_in_tag = false;
-		$buffer_tag_name = '';
-		$buffer_in_tag_name = false;
 		$buffer_last_tag = '';
-		$buffer_tag_closing = false;
-
-		// Buffers for attribute parsing
-		$buffer_attr = '';
-		$buffer_attr_name = '';
-		$buffer_attrs = array();
 
 		// Do the split
 		$len = strlen($this->_html);
