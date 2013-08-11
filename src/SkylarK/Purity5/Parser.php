@@ -106,7 +106,7 @@ class Parser
 	 */
 	private function parseTagName(&$i, &$closing) {
 		$buffer = '';
-		
+
 		while (isset($this->_html[$i])) {
 			$chr = $this->_html[$i];
 
@@ -152,15 +152,14 @@ class Parser
 			$i++;
 
 			// Is it a space?
-			if (!$name_search && !$in_string && $chr == ' ') {
-				// Flush buffers?
-				$attributes[$name] = $buffer;
-				$name_search = true;
-				$name = '';
-				$buffer = '';
-				continue;
-			}
 			if (!$in_string && $chr == ' ') {
+				// Flush buffers?
+				if (!empty($name)) {
+					$attributes[$name] = $buffer;
+					$name_search = true;
+					$name = '';
+					$buffer = '';
+				}
 				continue;
 			}
 

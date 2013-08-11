@@ -49,7 +49,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 			</head>
 			<body>
 				<h1>Heading</h1>
-				<p class="test" data-selector="lorum > ipsum" required>Welcome to Purity5!</p>
+				<p class="test" data-selector="lorum > ipsum" required foo=bar>Welcome to Purity5!</p>
 			</body>
 		</html>';
 		
@@ -78,6 +78,6 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals("h1", $h1->name());
 		$p = $body_children[1];
 		$this->assertEquals("p", $p->name());
-		$this->assertEquals(array("class" => "test", "data-selector" => "lorum > ipsum", "required" => ""), $p->attributes());
+		$this->assertEquals(array("class" => "test", "data-selector" => "lorum > ipsum", "required" => "", "foo" => "bar"), $p->attributes());
 	}
 }
