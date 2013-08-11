@@ -142,5 +142,13 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("body > .lorum");
 		$result = $query->run($root);
 		$this->assertEquals(array($p2), $result);
+
+		$query = new TestableQuery("* > .lorum");
+		$result = $query->run($root);
+		$this->assertEquals(array($p2, $p3), $result);
+
+		$query = new TestableQuery("* .lorum");
+		$result = $query->run($root);
+		$this->assertEquals(array($p2, $p3), $result);
 	}
 }

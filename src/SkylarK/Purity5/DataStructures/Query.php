@@ -173,7 +173,12 @@ class Query
 					foreach ($searchSet as $elem) {
 						foreach ($elem->children() as $child) {
 							if ($matchMode == 0) {
-								$resultSet = array_merge($resultSet, $this->search($child, $query));
+								$results = $this->search($child, $query);
+								foreach ($results as $result) {
+									if (!in_array($result, $resultSet)) {
+										$resultSet[] = $result;
+									}
+								}
 							}
 							if ($matchMode == 1 && $this->match($child, $query)) {
 								$resultSet[] = $child;
