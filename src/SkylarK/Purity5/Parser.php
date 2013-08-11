@@ -45,6 +45,7 @@ class Parser
 		$buffer_in_tag = false;
 		$buffer_tag_name = '';
 		$buffer_in_tag_name = false;
+		$buffer_last_tag = '';
 
 		// Buffers for attribute parsing
 		$buffer_attr = '';
@@ -77,6 +78,7 @@ class Parser
 					} else {
 						$this->_document->createChild($buffer_tag_name, $buffer_attrs);
 					}
+					$buffer_last_tag = $buffer_tag_name;
 					// Reset buffers
 					$buffer_in_tag = false;
 					$buffer_in_tag_name = false;
