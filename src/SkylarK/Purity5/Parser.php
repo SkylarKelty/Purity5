@@ -58,77 +58,45 @@ class Parser
 		$len = strlen($this->_html);
 		for ($i = 0; $i < $len; $i++) {
 			$chr = $this->_html[$i];
-			$buffer .= $chr;
 
-			// Are we starting a new tag?
+			// Have we hit a new tag?
 			if ($chr == '<' && !$buffer_in_string) {
-				$buffer_in_tag = true;
-				$buffer_in_tag_name = true;
-				continue;
-			}
+				$closing = false;
+				$tag_name = $this->parseTagName($i, $closing);
+				$tag_attrs = array();
+				if (!$closing && $this->_html[$i] == ' ') {
+					$tag_attrs = $this->parseAttributes($i);
+				}
 
-			// Should we be appending to a new tag name?
-			if ($buffer_in_tag_name) {
-				// If we hit a space, we are not in a tag anymore
-				if ($chr == ' ') {
-					$buffer_in_tag_name = false;
+				// Are we to close something?
+				if ($closing) {
+					// Are we expecting this to be closed?
+					if ($tag_name !== $buffer_last_tag) {
+						throw new \Exception("Parser error: Encountered closing " . $tag_name . " was expecting " . $buffer_last_tag);
+					}
+
+					// We want to go back a bit
+					$buffer_parent = $buffer_parent->parent();
+					if (!$buffer_parent) {
+						$buffer_parent = $this->_document;
+					}
+					$buffer_last_tag = $buffer_parent->name();
+
 					continue;
 				}
 
-				// We are closing the last tag
-				if ($chr == '/') {
-					$buffer_tag_closing = true;
-					continue;
-				}
-
-				// And we hit the end of the tag
-				if ($chr == '>') {
-					// If we were closing the previous tag...
-					if ($buffer_tag_closing) {
-						// Are we expecting this to be closed?
-						if ($buffer_tag_name !== $buffer_last_tag) {
-							throw new \Exception("Parser error: Wasnt expecting " . $buffer_tag_name . " was expecting " . $buffer_last_tag);
-						}
-
-						// We want to go back a bit
-						$buffer_parent = $buffer_parent->parent();
-						if (!$buffer_parent) {
-							$buffer_parent = $this->_document;
-						}
-
-						// Set new logic buffers
-						$buffer_last_tag = $buffer_parent->name();
-						$buffer_tag_closing = false;
+				// Are we to create something?
+				if (!$closing) {
+					if (!$this->_document) {
+						$buffer_parent = $this->_document = PureTree::buildRoot($tag_name, $tag_attrs);
 					}
 					else {
-						// We are opening a tag
-						if (!$this->_document) {
-							$buffer_parent = $this->_document = PureTree::buildRoot($buffer_tag_name, $buffer_attrs);
-						}
-						else {
-							$buffer_parent = $buffer_parent->createChild($buffer_tag_name, $buffer_attrs);
-						}
-						$buffer_last_tag = $buffer_tag_name;
+						$buffer_parent = $buffer_parent->createChild($tag_name, $tag_attrs);
 					}
+					$buffer_last_tag = $tag_name;
 					
-					// Reset buffers
-					$buffer_in_tag = false;
-					$buffer_in_tag_name = false;
-					$buffer_tag_name = '';
-					$buffer_attrs = array();
-
 					continue;
 				}
-				$buffer_tag_name .= $chr;
-				continue;
-			}
-
-			// Are we in a tag but not in a tag name?
-			if ($buffer_in_tag && !$buffer_in_tag_name) {
-				// Attribute parsing
-				print "\n<<<<<<\n" . substr($this->_html, $i, 10) . "\n";
-				$buffer_attrs = $this->parseAttributes($i);
-				print substr($this->_html, $i, 10) . "\n\n>>>>>\n";
 			}
 		}
 	}
@@ -136,7 +104,32 @@ class Parser
 	/**
 	 * Parse tag name
 	 */
-	private function parseTagName(&$i) {
+	private function parseTagName(&$i, &$closing) {
+		$buffer = '';
+		
+		while (isset($this->_html[$i])) {
+			$chr = $this->_html[$i];
+
+			// Finished if we dont have an empty buffer, or have encountered a >
+			// Support spaced closing tags, e.g. </ hi  >
+			if ((!empty($buffer) && !$closing && $chr == ' ') || $chr == '>') {
+				break;
+			}
+
+			$i++;
+
+			switch ($chr) {
+				case '/':
+					$closing = true;
+				case ' ':
+				case '<':
+					continue;
+				default:
+					$buffer .= $chr;
+			}
+		}
+
+		return $buffer;
 	}
 
 	/**
@@ -151,14 +144,12 @@ class Parser
 		while (isset($this->_html[$i])) {
 			$chr = $this->_html[$i];
 
-			// Increment counter
-			$i++;
-
 			// Closing out?
 			if (!$in_string && ($chr == '/' || $chr == '>')) {
-				$i--;
 				break;
 			}
+
+			$i++;
 
 			// Is it a space?
 			if (!$name_search && !$in_string && $chr == ' ') {
