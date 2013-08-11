@@ -32,4 +32,29 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$result = $query->call("breakPath", array("html> title"));
 		$this->assertEquals(array("html", "title"), $result);
 	}
+
+	public function test_MatchPath() {
+		$query = new TestableQuery("html");
+
+		$result = $query->call("matchPath", array(array("html", "title"), array("html", "title")));
+		$this->assertTrue($result);
+
+		$result = $query->call("matchPath", array(array("html", "title"), array("root", "html", "title")));
+		$this->assertTrue($result);
+
+		$result = $query->call("matchPath", array(array("html", "title"), array("root", "second", "html", "title", "level")));
+		$this->assertTrue($result);
+
+		$result = $query->call("matchPath", array(array("html", "title"), array("root", "second", "html", "level", "title")));
+		$this->assertTrue($result);
+
+		$result = $query->call("matchPath", array(array("html", "html"), array("title", "html", "html")));
+		$this->assertTrue($result);
+
+		$result = $query->call("matchPath", array(array("html", "title"), array("title", "html")));
+		$this->assertFalse($result);
+
+		$result = $query->call("matchPath", array(array("html", "html"), array("title", "html")));
+		$this->assertFalse($result);
+	}
 }

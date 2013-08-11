@@ -46,6 +46,7 @@ class Query
 		$len = strlen($query);
 		for ($i = 0; $i < $len; $i++) {
 			$chr = $query[$i];
+			// Split by > and whitespace
 			if ($chr == '>' || $chr == ' ') {
 				if ($buffer !== '') {
 					$result[] = $buffer;
@@ -55,11 +56,31 @@ class Query
 			}
 			$buffer .= $chr;
 		}
+
+		// Store whatevers left in the buffer (if there is anything there)
 		if ($buffer !== '') {
 			$result[] = $buffer;
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Match two paths, if the first path appears anywhere in the second path
+	 */
+	protected function matchPath($path, $directory) {
+		$matchDirectory = $directory;
+		foreach ($path as $elem) {
+			$matched = false;
+			// Go through $matchDirectory and see if our element matches
+			$match = array_search($elem, $matchDirectory);
+			if ($match === false) {
+				return false;
+			}
+			// Cut down the matchDirectory
+			$matchDirectory = array_slice($matchDirectory, $match + 1);
+		}
+		return true;
 	}
 
 	/**
