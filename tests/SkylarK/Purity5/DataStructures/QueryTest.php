@@ -34,6 +34,12 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$result = $query->call("breakPath", array("html> title"));
 		$this->assertEquals(array("html", ">", "title"), $result);
+
+		$result = $query->call("breakPath", array("body > h1:first-child"));
+		$this->assertEquals(array("body", ">", "h1:first-child"), $result);
+
+		$result = $query->call("breakPath", array("body > h1:nth-child(0)"));
+		$this->assertEquals(array("body", ">", "h1:nth-child(0)"), $result);
 	}
 
 	public function test_MatchPath() {
