@@ -9,14 +9,18 @@ namespace SkylarK\Purity5\DataStructures;
 
 class PureTree
 {
+	/** Current UID counter */
+	private static $_idCount = 0;
+	/** The ID of this node */
+	private $_id;
+	/** Parent of this node */
+	private $_parent;
 	/** The name of this node */
 	private $_name;
 	/** Attributes of this node */
 	private $_attributes;
 	/** The contents of this node */
 	private $_contents;
-	/** Parent of this node */
-	private $_parent;
 	/** Children of this node */
 	private $_children;
 	/** Node's path in the doc */
@@ -31,6 +35,7 @@ class PureTree
 	 * @param string $contents The HTML contents of this element
 	 */
 	private function __construct($parent, $name, $attributes = array(), $contents = '') {
+		$this->_id = PureTree::$_idCount++;
 		$this->_parent = $parent;
 		$this->_name = $name;
 		$this->_attributes = $attributes;
@@ -59,6 +64,13 @@ class PureTree
 	 */
 	public static function buildRoot($name = 'html', $attrs = array(), $contents = '') {
 		return new PureTree(null, $name, $attrs, $contents);
+	}
+
+	/**
+	 * Return the id of this element
+	 */
+	public function id() {
+		return $this->_id;
 	}
 
 	/**
