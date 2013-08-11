@@ -55,6 +55,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$p1 = $body->createChild("p", array(), '');
 		$p2 = $body->createChild("p", array(), '');
 		$p3 = $p2->createChild("p", array(), '');
+		$p4 = $p2->createChild("p", array(), '');
 
 		$query = new TestableQuery("html");
 		$result = $query->run($root);
@@ -62,7 +63,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("p");
 		$result = $query->run($root);
-		$this->assertEquals(3, count($result));
+		$this->assertEquals(4, count($result));
 
 		$query = new TestableQuery("html title");
 		$result = $query->run($root);
@@ -74,7 +75,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("p p");
 		$result = $query->run($root);
-		$this->assertEquals(array($p3), $result);
+		$this->assertEquals(array($p3, $p4), $result);
 
 		$query = new TestableQuery("html body h1");
 		$result = $query->run($root);
