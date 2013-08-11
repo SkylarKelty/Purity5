@@ -40,8 +40,8 @@ class PureTree
 	/**
 	 * Build a root element
 	 */
-	public static function buildRoot($attrs = array(), $contents) {
-		return new PureTree(array(), "html", $attrs, $contents);
+	public static function buildRoot($name = 'html', $attrs = array(), $contents = '') {
+		return new PureTree(array(), $name, $attrs, $contents);
 	}
 
 	/**
@@ -63,6 +63,13 @@ class PureTree
 	 */
 	public function contents() {
 		return $this->_contents;
+	}
+
+	/**
+	 * Set the contents of this element
+	 */
+	public function setContents($html) {
+		$this->_contents = $html;
 	}
 
 	/**

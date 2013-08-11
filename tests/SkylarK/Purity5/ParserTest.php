@@ -16,7 +16,8 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		</html>';
 		
 		$obj = new SkylarK\Purity5\Parser($html);
+		$doc = $obj->getDocument();
 
-		//$this->assertEquals("Welcome", $func("title"));
+		$this->assertEquals("html", $doc->name());
 	}
 }
