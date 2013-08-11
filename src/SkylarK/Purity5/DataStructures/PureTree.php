@@ -71,14 +71,25 @@ class PureTree
 
 	/**
 	 * Recursive query function
+	 *
+	 * @param string $query The query to validate against
 	 */
 	public function query($query) {
+		return $this->_query(new Query($string));
+	}
+
+	/**
+	 * Recursive query function (internal version)
+	 *
+	 * @param Query $query The query to validate against
+	 */
+	private function _query(Query $query) {
 		$result = array();
-		if ($this->name == $query) {
+		if ($query->match($this)) {
 			$result[] = $this->name;
-			foreach ($this->children as $child) {
-				$result = array_merge($result, $child->query($query));
-			}
+		}
+		foreach ($this->children as $child) {
+			$result = array_merge($result, $child->_query($query, ''));
 		}
 		return $result;
 	}
