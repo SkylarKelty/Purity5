@@ -37,12 +37,13 @@ class Query
 	 * Match an object against this query
 	 * 
 	 * @param  PureTree $tree The tree to match
-	 * @param  string   $path The path of the object
+	 * 
 	 * @return boolean        The result (true if there was a match)
 	 */
-	public function match(PureTree $tree, $path) {
+	public function match(PureTree $tree) {
 		$name = $tree->name();
 		$attributes = $tree->attributes();
+		$path = $tree->path();
 
 		return $this->_query == $name || $this->_query == $path;
 	}

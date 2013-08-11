@@ -72,6 +72,13 @@ class PureTree
 	}
 
 	/**
+	 * Returns our path
+	 */
+	public function path() {
+		return $this->_path;
+	}
+
+	/**
 	 * Create a new child
 	 * 
 	 * @param string $name The name of this element
@@ -102,7 +109,7 @@ class PureTree
 	 */
 	private function _query(Query $query) {
 		$result = array();
-		if ($query->match($this, $this->_path)) {
+		if ($query->match($this)) {
 			$result[] = $this;
 		}
 		foreach ($this->_children as $child) {
