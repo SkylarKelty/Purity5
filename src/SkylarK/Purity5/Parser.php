@@ -95,14 +95,17 @@ class Parser
 						if (!$buffer_parent) {
 							$buffer_parent = $this->_document;
 						}
-						$buffer_last_tag = $buffer_parent->name();
 
+						// Set new logic buffers
+						$buffer_last_tag = $buffer_parent->name();
 						$buffer_tag_closing = false;
-					} else {
+					}
+					else {
 						// We are opening a tag
 						if (!$this->_document) {
 							$buffer_parent = $this->_document = PureTree::buildRoot($buffer_tag_name, $buffer_attrs);
-						} else {
+						}
+						else {
 							$buffer_parent = $buffer_parent->createChild($buffer_tag_name, $buffer_attrs);
 						}
 						$buffer_last_tag = $buffer_tag_name;
@@ -117,7 +120,94 @@ class Parser
 					continue;
 				}
 				$buffer_tag_name .= $chr;
+				continue;
+			}
+
+			// Are we in a tag but not in a tag name?
+			if ($buffer_in_tag && !$buffer_in_tag_name) {
+				// Attribute parsing
+				print "\n<<<<<<\n" . substr($this->_html, $i, 10) . "\n";
+				$buffer_attrs = $this->parseAttributes($i);
+				print substr($this->_html, $i, 10) . "\n\n>>>>>\n";
 			}
 		}
+	}
+
+	/**
+	 * Parse tag name
+	 */
+	private function parseTagName(&$i) {
+	}
+
+	/**
+	 * Parse attributes
+	 */
+	private function parseAttributes(&$i) {
+		$attributes = array();
+		$name_search = true;
+		$in_string = false;
+		$buffer = '';
+		$name = '';
+		while (isset($this->_html[$i])) {
+			$chr = $this->_html[$i];
+
+			// Increment counter
+			$i++;
+
+			// Closing out?
+			if (!$in_string && ($chr == '/' || $chr == '>')) {
+				$i--;
+				break;
+			}
+
+			// Is it a space?
+			if (!$name_search && !$in_string && $chr == ' ') {
+				// Flush buffers?
+				$attributes[$name] = $buffer;
+				$name_search = true;
+				$name = '';
+				$buffer = '';
+				continue;
+			}
+			if (!$in_string && $chr == ' ') {
+				continue;
+			}
+
+			// Is it a quote?
+			if ($chr == '\'' || $chr == '"') {
+				// Was it escaped?
+				if ($i > 0 && $this->_html[$i - 1] !== '\\') {
+					// No
+					$in_string = !$in_string;
+					// Should we flush buffers?
+					if (!$in_string) {
+						// Yes
+						$attributes[$name] = $buffer;
+						$name_search = true;
+						$name = '';
+						$buffer = '';
+					}
+					continue;
+				}
+			}
+
+			// Is it an assignment?
+			if (!$in_string && $chr == '=') {
+				$name_search = false;
+				continue;
+			}
+
+			// Do we have a name?
+			if ($name_search) {
+				$name .= $chr;
+			} else {
+				// Add to buffer
+				$buffer .= $chr;
+			}
+		}
+
+		// Flush buffers
+		$attributes[$name] = $buffer;
+		return $attributes;
 	}
 }
