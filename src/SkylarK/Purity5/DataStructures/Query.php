@@ -93,38 +93,27 @@ class Query
 	 * Internal run method
 	 */
 	private function _run($tree, $path) {
-		$resultSet = array();
-		
-		// Search the tree for everything that matches the first element
-		$searchSet = $this->search($tree, array_shift($path));
-		/*if (empty($searchSet)) {
-			return false;
-		}
+		$resultSet = $this->search($tree, array_shift($path));
 
-		// If we have no path left, then we won
-		if (empty($path)) {
-			return $searchSet;
-		}
-
-		// Okay we have a start
 		while (!empty($path)) {
-			$elem = array_shift($path);
-			switch ($elem) {
+			$query = array_shift($path);
+			switch ($query) {
 				case '+':
 					break;
 				case '>':
 					break;
 				default:
-					// Search the search sets
-					$results = array();
-					foreach ($searchSet as $branch) {
-						$results = array_merge($results, $this->search($branch, $elem));
+					$searchSet = $resultSet;
+					$resultSet = array();
+					foreach ($searchSet as $elem) {
+						foreach ($elem->children() as $child) {
+							$resultSet = array_merge($resultSet, $this->search($child, $query));
+						}
 					}
-					$searchSet = $results;
 			}
-		}*/
+		}
 
-		return $searchSet;
+		return $resultSet;
 	}
 
 	/**

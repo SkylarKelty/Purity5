@@ -58,7 +58,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("html");
 		$result = $query->run($root);
-		$this->assertEquals(1, count($result));
+		$this->assertEquals(array($root), $result);
 
 		$query = new TestableQuery("p");
 		$result = $query->run($root);
@@ -66,7 +66,17 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("html title");
 		$result = $query->run($root);
+		$this->assertEquals(array($title), $result);
+
+		$query = new TestableQuery("html html");
+		$result = $query->run($root);
+		$this->assertEquals(0, count($result));
+
+		$query = new TestableQuery("p p");
+		$result = $query->run($root);
 		$this->assertEquals(1, count($result));
+
+		// Selector magic
 
 		/*$query = new TestableQuery("html > title");
 		$result = $query->run($root);
@@ -77,18 +87,6 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(0, count($result));
 
 		$query = new TestableQuery("html > head > title");
-		$result = $query->run($root);
-		$this->assertEquals(0, count($result));
-
-		$query = new TestableQuery("html title");
-		$result = $query->run($root);
-		$this->assertEquals(0, count($result));
-
-		$query = new TestableQuery("html html");
-		$result = $query->run($root);
-		$this->assertFalse($result);
-
-		$query = new TestableQuery("p p");
 		$result = $query->run($root);
 		$this->assertEquals(0, count($result));*/
 	}
