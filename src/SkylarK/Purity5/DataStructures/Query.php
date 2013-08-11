@@ -32,13 +32,13 @@ class Query
 	 * Prepare this object for matching
 	 */
 	private function prepare() {
-		$this->_query_path = $this->breakPath($this->_query);
+		$this->_query_path = self::breakPath($this->_query);
 	}
 
 	/**
 	 * Breaks up a query path, returning an array of the elements this leaks down into
 	 */
-	protected function breakPath($query) {
+	public static function breakPath($query) {
 		$result = array();
 
 		// Breakup
@@ -94,8 +94,6 @@ class Query
 		$name = $tree->name();
 		$attributes = $tree->attributes();
 		$path = $tree->path();
-		$bPath = $this->breakPath($path);
-
-		return $this->_query == $name || $this->_query == $path || $this->matchPath($this->_query_path, $bPath);
+		return $this->_query == $name || $this->_query_path == $path || $this->matchPath($this->_query_path, $path);
 	}
 }

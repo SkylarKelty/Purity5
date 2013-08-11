@@ -34,13 +34,14 @@ class PureTree
 		$this->_contents = $contents;
 		$this->_children = array();
 		$this->_path = $path;
+		$this->_path[] = $name;
 	}
 
 	/**
 	 * Build a root element
 	 */
 	public static function buildRoot($contents) {
-		return new PureTree("html", "html", $contents);
+		return new PureTree(array(), "html", $contents);
 	}
 
 	/**
@@ -88,7 +89,7 @@ class PureTree
 	 * @return PureTree The resulting PureTree object
 	 */
 	public function createChild($name, $attributes = array(), $contents = '') {
-		$child = new PureTree($this->_path . " > " . $name, $name, $contents, $attributes);
+		$child = new PureTree($this->_path, $name, $contents, $attributes);
 		$this->_children[] = $child;
 		return $child;
 	}

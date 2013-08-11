@@ -15,13 +15,17 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('<head><title>Welcome</title></head>', $root->contents());
 		$this->assertEquals(0, count($root->children()));
 		
-		$c1 = $root->createChild("head", array(), '<title>Welcome</title>');
-		$c2 = $c1->createChild("title", array(), 'Welcome');
+		$head = $root->createChild("head", array(), '<title>Welcome</title>');
+		$title = $head->createChild("title", array(), 'Welcome');
 
 
 		$this->assertEquals(1, count($root->children()));
-		$this->assertEquals(1, count($c1->children()));
-		$this->assertEquals(0, count($c2->children()));
+		$this->assertEquals(1, count($head->children()));
+		$this->assertEquals(0, count($title->children()));
+
+		$this->assertEquals(1, count($root->path()));
+		$this->assertEquals(2, count($head->path()));
+		$this->assertEquals(3, count($title->path()));
 	}
 
 	public function test_TreeQuery() {
