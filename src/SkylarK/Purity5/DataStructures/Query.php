@@ -76,6 +76,13 @@ class Query
 	}
 
 	/**
+	 * Match two elements in "plusMode"
+	 */
+	private function plusModeMatch($tree, $query) {
+		return $tree->name() == $query;
+	}
+
+	/**
 	 * Search a tree for a given element
 	 */
 	private function search($tree, $query) {
@@ -93,16 +100,20 @@ class Query
 	 * Internal run method
 	 */
 	private function _run($tree, $path) {
-		$resultSet = $this->search($tree, array_shift($path));
+		$resultSet = $this->search($tree, $path[0]);
 
+		$buffer = '';
 		$matchMode = 0;
-		while (!empty($path)) {
-			$query = array_shift($path);
+		$len = count($path);
+		for ($i = 1; $i < $len; $i++) {
+			$query = $path[$i];
 			switch ($query) {
-				case '+':
-					break;
 				case '>':
 					$matchMode = 1;
+					break;
+				case '+':
+					$matchMode = 2;
+					$buffer = $path[++$i];
 					break;
 				default:
 					$searchSet = $resultSet;
@@ -115,6 +126,9 @@ class Query
 							if ($matchMode == 1 && $this->match($child, $query)) {
 								$resultSet[] = $child;
 							}
+							//if ($matchMode == 2 && $this->plusModeMatch($child, $query)) {
+							//	$resultSet[] = $child;
+							//}
 						}
 					}
 					$matchMode = 0;
