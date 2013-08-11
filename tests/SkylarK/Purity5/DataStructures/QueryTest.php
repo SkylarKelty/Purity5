@@ -57,35 +57,35 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$p3 = $p2->createChild("p", array(), '');
 
 		$query = new TestableQuery("html");
-		$result = $query->call("matchPath", array($root));
+		$result = $query->match($root);
 		$this->assertTrue($result);
 
-		$query = new TestableQuery("html title");
-		$result = $query->call("matchPath", array($root));
+		/*$query = new TestableQuery("html title");
+		$result = $query->match($root);
 		$this->assertTrue($result);
 
 		$query = new TestableQuery("html > title");
-		$result = $query->call("matchPath", array($root));
+		$result = $query->match($root);
 		$this->assertFalse($result);
 
 		$query = new TestableQuery("html > head");
-		$result = $query->call("matchPath", array($root));
+		$result = $query->match($root);
 		$this->assertTrue($result);
 
 		$query = new TestableQuery("html > head > title");
-		$result = $query->call("matchPath", array($root));
+		$result = $query->match($root);
 		$this->assertTrue($result);
 
 		$query = new TestableQuery("html title");
-		$result = $query->call("matchPath", array($root));
+		$result = $query->match($root);
 		$this->assertTrue($result);
 
 		$query = new TestableQuery("html html");
-		$result = $query->call("matchPath", array($root));
+		$result = $query->match($root);
 		$this->assertFalse($result);
 
 		$query = new TestableQuery("p p");
-		$result = $query->call("matchPath", array($root));
-		$this->assertTrue($result);
+		$result = $query->match($root);
+		$this->assertTrue($result);*/
 	}
 }
