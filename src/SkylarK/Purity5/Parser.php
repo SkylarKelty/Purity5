@@ -60,12 +60,12 @@ class Parser
 			$chr = $this->_html[$i];
 
 			// Have we hit a new tag?
-			if ($chr == '<' && !$buffer_in_string) {
+			if ($chr == '<') {
 				$closing = false;
 				$tag_name = $this->parseTagName($i, $closing);
 				$tag_attrs = array();
 				if (!$closing && $this->_html[$i] == ' ') {
-					$tag_attrs = $this->parseAttributes($i);
+					$tag_attrs = $this->parseAttributes($i, $closing);
 				}
 
 				// Are we to close something?
@@ -93,10 +93,22 @@ class Parser
 					else {
 						$buffer_parent = $buffer_parent->createChild($tag_name, $tag_attrs);
 					}
+
+					// Is this a self closing tag?
+					if ($this->_html[$i] == "/") {
+						$i++;
+						$buffer_parent = $buffer_parent->parent();
+						if (!$buffer_parent) {
+							$buffer_parent = $this->_document;
+						}
+						continue;
+					}
+
 					$buffer_last_tag = $tag_name;
-					
 					continue;
 				}
+
+				$i++;
 			}
 		}
 	}
@@ -112,7 +124,7 @@ class Parser
 
 			// Finished if we dont have an empty buffer, or have encountered a >
 			// Support spaced closing tags, e.g. </ hi  >
-			if ((!empty($buffer) && !$closing && $chr == ' ') || $chr == '>') {
+			if ((!empty($buffer) && !$closing && ($chr == ' '|| $chr == '/')) || $chr == '>') {
 				break;
 			}
 
@@ -135,7 +147,7 @@ class Parser
 	/**
 	 * Parse attributes
 	 */
-	private function parseAttributes(&$i) {
+	private function parseAttributes(&$i, &$closing) {
 		$attributes = array();
 		$name_search = true;
 		$in_string = false;
@@ -197,7 +209,10 @@ class Parser
 		}
 
 		// Flush buffers
-		$attributes[$name] = $buffer;
+		if (!empty($name)) {
+			$attributes[$name] = $buffer;
+		}
+
 		return $attributes;
 	}
 }

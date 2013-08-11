@@ -12,6 +12,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 			<body>
 				<h1>Heading</h1>
 				<p>Welcome to Purity5!</p>
+				<img/>
 			</body>
 		</html>';
 		
@@ -35,11 +36,13 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 		// Check the body
 		$body_children = $body->children();
-		$this->assertEquals(2, count($body_children));
+		$this->assertEquals(3, count($body_children));
 		$h1 = $body_children[0];
 		$this->assertEquals("h1", $h1->name());
 		$p = $body_children[1];
 		$this->assertEquals("p", $p->name());
+		$img = $body_children[2];
+		$this->assertEquals("img", $img->name());
 	}
 
 	public function test_AttributeParse() {
@@ -50,6 +53,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 			<body>
 				<h1>Heading</h1>
 				<p class="test" data-selector="lorum > ipsum" required foo=bar>Welcome to Purity5!</p>
+				<img src="lorum.jpg"/>
 			</body>
 		</html>';
 		
@@ -73,11 +77,14 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 		// Check the body
 		$body_children = $body->children();
-		$this->assertEquals(2, count($body_children));
+		$this->assertEquals(3, count($body_children));
 		$h1 = $body_children[0];
 		$this->assertEquals("h1", $h1->name());
 		$p = $body_children[1];
 		$this->assertEquals("p", $p->name());
 		$this->assertEquals(array("class" => "test", "data-selector" => "lorum > ipsum", "required" => "", "foo" => "bar"), $p->attributes());
+		$img = $body_children[2];
+		$this->assertEquals("img", $img->name());
+		$this->assertEquals(array("src" => "lorum.jpg"), $img->attributes());
 	}
 }
