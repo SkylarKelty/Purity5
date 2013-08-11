@@ -117,7 +117,12 @@ class PureTree
 	 * @param string $query The query to validate against
 	 */
 	public function query($query) {
-		return $this->_query(new Query($query));
+		$result = $this->_query(new Query($query));
+		$len = count($result);
+		if ($len == 0) {
+			return null;
+		}
+		return $len == 1 ? $result[0] : $result;
 	}
 
 	/**

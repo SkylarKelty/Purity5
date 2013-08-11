@@ -44,30 +44,30 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 		// Now test querying
 		$result = $root->query("title");
 		$this->assertEquals(1, count($result));
-		$this->assertEquals($title, $result[0]);
+		$this->assertEquals($title, $result);
 
 		// More complex query
 		$result = $root->query("html > head > title");
 		$this->assertEquals(1, count($result));
-		$this->assertEquals($title, $result[0]);
+		$this->assertEquals($title, $result);
 
 		// Another query
 		$result = $root->query("html head title");
 		$this->assertEquals(1, count($result));
-		$this->assertEquals($title, $result[0]);
+		$this->assertEquals($title, $result);
 
 		// Another query
 		$result = $root->query("html title");
 		$this->assertEquals(1, count($result));
-		$this->assertEquals($title, $result[0]);
+		$this->assertEquals($title, $result);
 
 		// Another query
 		$result = $root->query("head > title");
 		$this->assertEquals(1, count($result));
-		$this->assertEquals($title, $result[0]);
+		$this->assertEquals($title, $result);
 
 		// Test the '>' priorities
 		$result = $root->query("body > span");
-		$this->assertEquals(0, count($result));
+		$this->assertEquals(null, $result);
 	}
 }
