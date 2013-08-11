@@ -92,7 +92,7 @@ class PureTree
 	 * @param string $query The query to validate against
 	 */
 	public function query($query) {
-		return $this->_query(new Query($string));
+		return $this->_query(new Query($query));
 	}
 
 	/**
@@ -102,11 +102,11 @@ class PureTree
 	 */
 	private function _query(Query $query) {
 		$result = array();
-		if ($query->match($this)) {
-			$result[] = $this->name;
+		if ($query->match($this, $this->_path)) {
+			$result[] = $this;
 		}
-		foreach ($this->children as $child) {
-			$result = array_merge($result, $child->_query($query, $this->_path));
+		foreach ($this->_children as $child) {
+			$result = array_merge($result, $child->_query($query));
 		}
 		return $result;
 	}
