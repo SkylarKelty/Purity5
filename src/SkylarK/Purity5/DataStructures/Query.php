@@ -72,7 +72,7 @@ class Query
 	 * Match two elements
 	 */
 	private function match($tree, $query) {
-		return $tree->name() == $query;
+		return $query == '*' || $tree->name() == $query;
 	}
 
 	/**

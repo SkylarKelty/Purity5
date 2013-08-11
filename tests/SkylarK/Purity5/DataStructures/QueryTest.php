@@ -106,5 +106,13 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("p + p");
 		$result = $query->run($root);
 		$this->assertEquals(array($p2, $p4), $result);
+
+		$query = new TestableQuery("p *");
+		$result = $query->run($root);
+		$this->assertEquals(array($p3, $p4), $result);
+
+		$query = new TestableQuery("html > head *");
+		$result = $query->run($root);
+		$this->assertEquals(array($title), $result);
 	}
 }
