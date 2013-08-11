@@ -15,6 +15,8 @@ class PureTree
 	private $_attributes;
 	/** The contents of this node */
 	private $_contents;
+	/** Parent of this node */
+	private $_parent;
 	/** Children of this node */
 	private $_children;
 	/** Node's path in the doc */
@@ -23,17 +25,18 @@ class PureTree
 	/**
 	 * Construct a new tree
 	 * 
-	 * @param string $path The overall path of this element in the doc root
+	 * @param string $parent The parent of this element
 	 * @param string $name The name of this element
 	 * @param array  $attributes A list of our attributes
 	 * @param string $contents The HTML contents of this element
 	 */
-	private function __construct($path, $name, $attributes = array(), $contents = '') {
+	private function __construct($parent, $name, $attributes = array(), $contents = '') {
+		$this->_parent = $parent;
 		$this->_name = $name;
 		$this->_attributes = $attributes;
 		$this->_contents = $contents;
 		$this->_children = array();
-		$this->_path = $path;
+		$this->_path = isset($parent) ? $parent->path() : array();
 		$this->_path[] = $name;
 	}
 
@@ -41,7 +44,7 @@ class PureTree
 	 * Build a root element
 	 */
 	public static function buildRoot($name = 'html', $attrs = array(), $contents = '') {
-		return new PureTree(array(), $name, $attrs, $contents);
+		return new PureTree(null, $name, $attrs, $contents);
 	}
 
 	/**
@@ -73,6 +76,13 @@ class PureTree
 	}
 
 	/**
+	 * Returns our parent
+	 */
+	public function parent() {
+		return $this->_parent;
+	}
+
+	/**
 	 * Returns our children
 	 */
 	public function children() {
@@ -96,7 +106,7 @@ class PureTree
 	 * @return PureTree The resulting PureTree object
 	 */
 	public function createChild($name, $attributes = array(), $contents = '') {
-		$child = new PureTree($this->_path, $name, $attributes, $contents);
+		$child = new PureTree($this, $name, $attributes, $contents);
 		$this->_children[] = $child;
 		return $child;
 	}
