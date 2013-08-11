@@ -17,19 +17,30 @@ class PureTree
 	private $_contents;
 	/** Children of this node */
 	private $_children;
+	/** Node's path in the doc */
+	private $_path;
 
 	/**
 	 * Construct a new tree
 	 * 
+	 * @param string $path The overall path of this element in the doc root
 	 * @param string $name The name of this element
-	 * @param array $attributes A list of our attributes
-	 * @param string $contents the HTML contents of this element
+	 * @param string $contents The HTML contents of this element
+	 * @param array  $attributes A list of our attributes
 	 */
-	public function __construct($name, $attributes, $contents) {
+	private function __construct($path, $name, $contents = '', $attributes = array()) {
 		$this->_name = $name;
 		$this->_attributes = $attributes;
 		$this->_contents = $contents;
 		$this->_children = array();
+		$this->_path = $path;
+	}
+
+	/**
+	 * Build a root element
+	 */
+	public static function buildRoot($contents) {
+		return new PureTree("html", "html", $contents);
 	}
 
 	/**
@@ -61,12 +72,18 @@ class PureTree
 	}
 
 	/**
-	 * Add a new child
+	 * Create a new child
 	 * 
-	 * @param PureTree $child The child to add
+	 * @param string $name The name of this element
+	 * @param array  $attributes A list of our attributes
+	 * @param string $contents The HTML contents of this element
+	 *
+	 * @return PureTree The resulting PureTree object
 	 */
-	public function addChild(PureTree $child) {
+	public function createChild($name, $attributes = array(), $contents = '') {
+		$child = new PureTree($this->_path . " > " . $name, $name, $contents, $attributes);
 		$this->_children[] = $child;
+		return $child;
 	}
 
 	/**
@@ -89,7 +106,7 @@ class PureTree
 			$result[] = $this->name;
 		}
 		foreach ($this->children as $child) {
-			$result = array_merge($result, $child->_query($query, ''));
+			$result = array_merge($result, $child->_query($query, $this->_path));
 		}
 		return $result;
 	}
