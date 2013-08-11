@@ -74,11 +74,11 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("p p");
 		$result = $query->run($root);
-		$this->assertEquals(1, count($result));
+		$this->assertEquals(array($p3), count($result));
 
 		// Selector magic
 
-		/*$query = new TestableQuery("html > title");
+		$query = new TestableQuery("html > title");
 		$result = $query->run($root);
 		$this->assertFalse($result);
 
@@ -88,6 +88,6 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("html > head > title");
 		$result = $query->run($root);
-		$this->assertEquals(0, count($result));*/
+		$this->assertEquals(0, count($result));
 	}
 }
