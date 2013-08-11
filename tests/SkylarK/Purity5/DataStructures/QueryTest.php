@@ -52,9 +52,9 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$title = $head->createChild("title", array(), '');
 		$body = $root->createChild("body", array(), '');
 		$h1 = $body->createChild("h1", array(), '');
-		$p1 = $body->createChild("p", array(), '');
-		$p2 = $body->createChild("p", array(), '');
-		$p3 = $p2->createChild("p", array(), '');
+		$p1 = $body->createChild("p", array("id" => "example"), '');
+		$p2 = $body->createChild("p", array("class" => "example lorum"), '');
+		$p3 = $p2->createChild("p", array("class" => "lorum"), '');
 		$p4 = $p2->createChild("p", array(), '');
 
 		$query = new TestableQuery("html");
@@ -118,5 +118,17 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("*");
 		$result = $query->run($root);
 		$this->assertEquals(9, count($result));
+
+		$query = new TestableQuery("#example");
+		$result = $query->run($root);
+		$this->assertEquals(array($p1), $result);
+
+		$query = new TestableQuery(".example");
+		$result = $query->run($root);
+		$this->assertEquals(array($p2), $result);
+
+		$query = new TestableQuery(".lorum");
+		$result = $query->run($root);
+		$this->assertEquals(array($p2, $p3), $result);
 	}
 }
