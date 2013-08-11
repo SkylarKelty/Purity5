@@ -93,6 +93,8 @@ class Query
 	 * Internal run method
 	 */
 	private function _run($tree, $path) {
+		$resultSet = array();
+		
 		// Search the tree for everything that matches the first element
 		$searchSet = $this->search($tree, array_shift($path));
 		/*if (empty($searchSet)) {

@@ -58,15 +58,15 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("html");
 		$result = $query->run($root);
-		$this->assertTrue(count($result) > 0);
+		$this->assertEquals(1, count($result));
 
 		$query = new TestableQuery("p");
 		$result = $query->run($root);
-		$this->assertTrue(count($result) > 0);
+		$this->assertEquals(3, count($result));
 
 		$query = new TestableQuery("html title");
 		$result = $query->run($root);
-		$this->assertTrue(count($result) > 0);
+		$this->assertEquals(1, count($result));
 
 		/*$query = new TestableQuery("html > title");
 		$result = $query->run($root);
@@ -74,15 +74,15 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("html > head");
 		$result = $query->run($root);
-		$this->assertTrue(count($result) > 0);
+		$this->assertEquals(0, count($result));
 
 		$query = new TestableQuery("html > head > title");
 		$result = $query->run($root);
-		$this->assertTrue(count($result) > 0);
+		$this->assertEquals(0, count($result));
 
 		$query = new TestableQuery("html title");
 		$result = $query->run($root);
-		$this->assertTrue(count($result) > 0);
+		$this->assertEquals(0, count($result));
 
 		$query = new TestableQuery("html html");
 		$result = $query->run($root);
@@ -90,6 +90,6 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("p p");
 		$result = $query->run($root);
-		$this->assertTrue(count($result) > 0);*/
+		$this->assertEquals(0, count($result));*/
 	}
 }
