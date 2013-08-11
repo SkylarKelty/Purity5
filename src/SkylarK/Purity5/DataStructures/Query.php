@@ -112,16 +112,27 @@ class Query
 	 * Internal run method
 	 */
 	private function _run($tree, $path) {
-		$resultSet = $this->search($tree, $path[0]);
+		$resultSet = array();
 
 		$matchMode = 0;
 		$len = count($path);
-		for ($i = 1; $i < $len; $i++) {
+		for ($i = 0; $i < $len; $i++) {
 			$query = $path[$i];
 
 			// Look ahead, do we have a + coming up?
 			// If so, discount this tag
 			if (isset($path[$i + 1]) && $path[$i + 1] == '+') {
+				if ($i == 0) {
+					// The query looks roughly like this: "a + b"
+					// This is a special case, lets find the parents of all of the 'b's
+					$searchSet = $this->search($tree, $path[$i + 2]);
+					foreach ($searchSet as $elem) {
+						$parent = $elem->parent();
+						if (!in_array($parent, $resultSet)) {
+							$resultSet[] = $parent;
+						}
+					}
+				}
 				continue;
 			}
 
@@ -134,6 +145,13 @@ class Query
 					$matchMode = 2;
 					break;
 				default:
+					// Special case for 0
+					if ($i == 0) {
+						$resultSet = $this->search($tree, $path[0]);
+						continue;
+					}
+
+					// Search the current result set
 					$searchSet = $resultSet;
 					$resultSet = array();
 					foreach ($searchSet as $elem) {
