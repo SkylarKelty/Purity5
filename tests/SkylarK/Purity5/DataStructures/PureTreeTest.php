@@ -26,7 +26,7 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 
 	public function test_TreeQuery() {
 		
-		$root = PureTree::buildRoot('<head><title>Welcome</title></head><body><h1>Lorum!</h1><p>String 1</p><p>String 2</p></body></html');
+		$root = PureTree::buildRoot('<head><title>Welcome</title></head><body><h1>Lorum!</h1><p>String 1</p><p>String 2 <span>Example</span></p></body></html');
 		
 		$head = $root->createChild("head", array(), '<title>Welcome</title>');
 		$title = $head->createChild("title", array(), 'Welcome');
@@ -34,7 +34,8 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 		$body = $root->createChild("body", array(), '<h1>Lorum!</h1><p>String 1</p><p>String 2</p>');
 		$h1 = $body->createChild("h1", array(), 'Lorum!');
 		$p1 = $body->createChild("p", array(), 'String 1');
-		$p2 = $body->createChild("p", array(), 'String 2');
+		$p2 = $body->createChild("p", array(), 'String 2 <span>Example</span>');
+		$span = $p2->createChild("span", array(), 'Example');
 
 		// Now test querying
 		$result = $root->query("title");
@@ -61,10 +62,8 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(1, count($result));
 		$this->assertEquals($title, $result[0]);
 
-		// Multiple result query
-		$result = $root->query("body > p");
-		$this->assertEquals(2, count($result));
-		$this->assertEquals($p1, $result[0]);
-		$this->assertEquals($p2, $result[1]);
+		// Test the '>' priorities
+		$result = $root->query("body > span");
+		//$this->assertEquals(0, count($result));
 	}
 }
