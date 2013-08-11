@@ -41,6 +41,13 @@ class PureTree
 	}
 
 	/**
+	 * Override toString
+	 */
+	public function __toString() {
+		return $this->contents();
+	}
+
+	/**
 	 * Build a root element
 	 */
 	public static function buildRoot($name = 'html', $attrs = array(), $contents = '') {
