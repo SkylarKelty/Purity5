@@ -68,4 +68,18 @@ class PureTree
 	public function addChild(PureTree $child) {
 		$this->_children[] = $child;
 	}
+
+	/**
+	 * Recursive query function
+	 */
+	public function query($query) {
+		$result = array();
+		if ($this->name == $query) {
+			$result[] = $this->name;
+			foreach ($this->children as $child) {
+				$result = array_merge($result, $child->query($query));
+			}
+		}
+		return $result;
+	}
 }
