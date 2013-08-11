@@ -66,6 +66,11 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(1, count($result));
 		$this->assertEquals($title, $result);
 
+		// Another query
+		$result = $root->query("head");
+		$this->assertEquals(1, count($result));
+		$this->assertEquals($head, $result);
+
 		// Test the '>' priorities
 		$result = $root->query("body > span");
 		$this->assertEquals(null, $result);

@@ -23,7 +23,6 @@ class Purity5
 	 */
 	public static function parse($markup) {
 		$parser = new Parser($markup);
-		
 		return function($query) use ($parser) {
 			return $parser->getDocument()->query($query);
 		};

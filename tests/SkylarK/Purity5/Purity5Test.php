@@ -17,5 +17,7 @@ class Purity5Test extends PHPUnit_Framework_TestCase
 		
 		$func = SkylarK\Purity5\Purity5::parse($html);
 		$this->assertEquals("Welcome", $func("title"));
+		$this->assertEquals("Welcome", $func("head title"));
+		//$this->assertEquals("Welcome", $func("head")->title);
 	}
 }

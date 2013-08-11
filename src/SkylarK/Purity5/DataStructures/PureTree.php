@@ -48,6 +48,13 @@ class PureTree
 	}
 
 	/**
+	 * Override __get
+	 */
+	public function __get($name) {
+		return $this->query($name);
+	}
+
+	/**
 	 * Build a root element
 	 */
 	public static function buildRoot($name = 'html', $attrs = array(), $contents = '') {
