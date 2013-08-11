@@ -25,10 +25,10 @@ class PureTree
 	 * 
 	 * @param string $path The overall path of this element in the doc root
 	 * @param string $name The name of this element
-	 * @param string $contents The HTML contents of this element
 	 * @param array  $attributes A list of our attributes
+	 * @param string $contents The HTML contents of this element
 	 */
-	private function __construct($path, $name, $contents = '', $attributes = array()) {
+	private function __construct($path, $name, $attributes = array(), $contents = '') {
 		$this->_name = $name;
 		$this->_attributes = $attributes;
 		$this->_contents = $contents;
@@ -40,8 +40,8 @@ class PureTree
 	/**
 	 * Build a root element
 	 */
-	public static function buildRoot($contents) {
-		return new PureTree(array(), "html", $contents);
+	public static function buildRoot($attrs = array(), $contents) {
+		return new PureTree(array(), "html", $attrs, $contents);
 	}
 
 	/**
@@ -89,7 +89,7 @@ class PureTree
 	 * @return PureTree The resulting PureTree object
 	 */
 	public function createChild($name, $attributes = array(), $contents = '') {
-		$child = new PureTree($this->_path, $name, $contents, $attributes);
+		$child = new PureTree($this->_path, $name, $attributes, $contents);
 		$this->_children[] = $child;
 		return $child;
 	}

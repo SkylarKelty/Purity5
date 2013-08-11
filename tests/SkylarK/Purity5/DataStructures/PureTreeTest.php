@@ -8,7 +8,7 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 
 	public function test_SimpleTree() {
 		
-		$root = PureTree::buildRoot('<head><title>Welcome</title></head>');
+		$root = PureTree::buildRoot(array(), '<head><title>Welcome</title></head>');
 
 		$this->assertEquals("html", $root->name());
 		$this->assertEquals(0, count($root->attributes()));
@@ -30,7 +30,7 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 
 	public function test_TreeQuery() {
 		
-		$root = PureTree::buildRoot('<head><title>Welcome</title></head><body><h1>Lorum!</h1><p>String 1</p><p>String 2 <span>Example</span></p></body></html');
+		$root = PureTree::buildRoot(array(), '<head><title>Welcome</title></head><body><h1>Lorum!</h1><p>String 1</p><p>String 2 <span>Example</span></p></body></html');
 		
 		$head = $root->createChild("head", array(), '<title>Welcome</title>');
 		$title = $head->createChild("title", array(), 'Welcome');
