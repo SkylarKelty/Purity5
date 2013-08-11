@@ -22,7 +22,6 @@ class Parser
 	public function __construct($html) {
 		$this->_html = $html;
 		$this->parse();
-		//$this->_document = PureTree::buildRoot(array(), '');
 	}
 
 	/**
@@ -37,6 +36,7 @@ class Parser
 	 */
 	protected function parse() {
 		// Buffers
+		$current_tag_buffer = array();
 		$buffer_parent = $this->_document;
 		$buffer_last_tag = '';
 
@@ -48,6 +48,7 @@ class Parser
 			// Have we hit a new tag?
 			if ($chr == '<') {
 				$closing = false;
+				$saved_i = $i;
 				$tag_name = $this->parseTagName($i, $closing);
 				$tag_attrs = array();
 				if (!$closing && $this->_html[$i] == ' ') {
@@ -60,6 +61,10 @@ class Parser
 					if ($tag_name !== $buffer_last_tag) {
 						throw new \Exception("Parser error: Encountered closing " . $tag_name . " was expecting " . $buffer_last_tag);
 					}
+
+					// Store contents
+					$start = $current_tag_buffer[spl_object_hash($buffer_parent)];
+					$buffer_parent->setContents(substr($this->_html, $start, $saved_i - $start));
 
 					// We want to go back a bit
 					$buffer_parent = $buffer_parent->parent();
@@ -79,6 +84,7 @@ class Parser
 					else {
 						$buffer_parent = $buffer_parent->createChild($tag_name, $tag_attrs);
 					}
+					$current_tag_buffer[spl_object_hash($buffer_parent)] = $i + 1;
 
 					// Is this a self closing tag?
 					if ($this->_html[$i] == "/") {

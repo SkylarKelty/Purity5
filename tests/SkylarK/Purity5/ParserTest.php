@@ -15,12 +15,14 @@ class ParserTest extends PHPUnit_Framework_TestCase
 				<img/>
 			</body>
 		</html>';
+		$html_contents = substr($html, 6, -7);
 		
 		$obj = new SkylarK\Purity5\Parser($html);
 		$doc = $obj->getDocument();
 
 		// Check the root doc
 		$this->assertEquals("html", $doc->name());
+		$this->assertEquals($html_contents, $doc->contents());
 		$children = $doc->children();
 		$this->assertEquals(2, count($children));
 		$head = $children[0];
