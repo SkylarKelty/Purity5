@@ -38,6 +38,7 @@ class Parser
 	protected function parse() {
 		// Generic buffers
 		$buffer = '';
+		$buffer_parent = $this->_document;
 		$buffer_in_string = false;
 
 		// Buffers for tag processing
@@ -46,6 +47,7 @@ class Parser
 		$buffer_tag_name = '';
 		$buffer_in_tag_name = false;
 		$buffer_last_tag = '';
+		$buffer_tag_closing = false;
 
 		// Buffers for attribute parsing
 		$buffer_attr = '';
@@ -67,23 +69,51 @@ class Parser
 
 			// Should we be appending to a new tag name?
 			if ($buffer_in_tag_name) {
+				// If we hit a space, we are not in a tag anymore
 				if ($chr == ' ') {
 					$buffer_in_tag_name = false;
 					continue;
 				}
-				if ($chr == '>' || $chr == '/') {
-					// Close the tag buffer
-					if (!$this->_document) {
-						$this->_document = PureTree::buildRoot($buffer_tag_name, $buffer_attrs);
+
+				// We are closing the last tag
+				if ($chr == '/') {
+					$buffer_tag_closing = true;
+					continue;
+				}
+
+				// And we hit the end of the tag
+				if ($chr == '>') {
+					// If we were closing the previous tag...
+					if ($buffer_tag_closing) {
+						// Are we expecting this to be closed?
+						if ($buffer_tag_name !== $buffer_last_tag) {
+							throw new \Exception("Parser error: Wasnt expecting " . $buffer_tag_name . " was expecting " . $buffer_last_tag);
+						}
+
+						// We want to go back a bit
+						$buffer_parent = $buffer_parent->parent();
+						if (!$buffer_parent) {
+							$buffer_parent = $this->_document;
+						}
+						$buffer_last_tag = $buffer_parent->name();
+
+						$buffer_tag_closing = false;
 					} else {
-						$this->_document->createChild($buffer_tag_name, $buffer_attrs);
+						// We are opening a tag
+						if (!$this->_document) {
+							$buffer_parent = $this->_document = PureTree::buildRoot($buffer_tag_name, $buffer_attrs);
+						} else {
+							$buffer_parent = $buffer_parent->createChild($buffer_tag_name, $buffer_attrs);
+						}
+						$buffer_last_tag = $buffer_tag_name;
 					}
-					$buffer_last_tag = $buffer_tag_name;
+					
 					// Reset buffers
 					$buffer_in_tag = false;
 					$buffer_in_tag_name = false;
 					$buffer_tag_name = '';
 					$buffer_attrs = array();
+
 					continue;
 				}
 				$buffer_tag_name .= $chr;
