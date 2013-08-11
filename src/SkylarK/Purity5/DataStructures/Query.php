@@ -69,32 +69,39 @@ class Query
 	}
 
 	/**
+	 * Match two elements
+	 */
+	private function match($tree, $query) {
+		return $tree->name() == $query;
+	}
+
+	/**
 	 * Search a tree for a given element
 	 */
-	private function search($tree, $elem) {
+	private function search($tree, $query) {
 		$results = array();
-		if ($tree->name() == $elem) {
+		if ($this->match($tree, $query)) {
 			$results[] = $tree;
 		}
 		foreach ($tree->children() as $child) {
-			$results = array_merge($results, $this->search($child, $elem));
+			$results = array_merge($results, $this->search($child, $query));
 		}
 		return $results;
 	}
 
 	/**
-	 * Match two paths, if the first path appears anywhere in the second path
+	 * Internal run method
 	 */
-	private function matchPath($tree, $path) {
+	private function _run($tree, $path) {
 		// Search the tree for everything that matches the first element
 		$searchSet = $this->search($tree, array_shift($path));
-		if (empty($searchSet)) {
+		/*if (empty($searchSet)) {
 			return false;
 		}
 
 		// If we have no path left, then we won
 		if (empty($path)) {
-			return true;
+			return $searchSet;
 		}
 
 		// Okay we have a start
@@ -113,9 +120,9 @@ class Query
 					}
 					$searchSet = $results;
 			}
-		}
+		}*/
 
-		return !empty($searchSet);
+		return $searchSet;
 	}
 
 	/**
@@ -125,6 +132,6 @@ class Query
 	 * @return array The result set
 	 */
 	public function run(PureTree $tree) {
-		return $this->matchPath($tree, $this->_query_path);
+		return $this->_run($tree, $this->_query_path);
 	}
 }
