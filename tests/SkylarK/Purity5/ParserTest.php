@@ -41,8 +41,10 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals("h1", $h1->name());
 		$p = $body_children[1];
 		$this->assertEquals("p", $p->name());
+		$this->assertEquals("Welcome to Purity5!", $p->contents());
 		$img = $body_children[2];
 		$this->assertEquals("img", $img->name());
+		$this->assertEquals("", $img->contents());
 	}
 
 	public function test_AttributeParse() {
