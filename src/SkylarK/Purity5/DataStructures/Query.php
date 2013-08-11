@@ -78,8 +78,20 @@ class Query
 	/**
 	 * Match two elements in "plusMode"
 	 */
-	private function plusModeMatch($tree, $query) {
-		return $tree->name() == $query;
+	private function plusModeMatch($tree, $query, $matchElem) {
+		if (!$this->match($tree, $query)) {
+			return false;
+		}
+		// We also want to check if the previous element of our parent was $matchElem
+		$parent = $tree->parent();
+		$prev = null;
+		foreach ($parent->children() as $child) {
+			if ($prev !== null && $this->match($prev, $matchElem) && $child == $tree) {
+				return true;
+			}
+			$prev = $child;
+		}
+		return false;
 	}
 
 	/**
@@ -102,18 +114,24 @@ class Query
 	private function _run($tree, $path) {
 		$resultSet = $this->search($tree, $path[0]);
 
-		$buffer = '';
 		$matchMode = 0;
 		$len = count($path);
 		for ($i = 1; $i < $len; $i++) {
 			$query = $path[$i];
+
+			// Look ahead, do we have a + coming up?
+			// If so, discount this tag
+			if (isset($path[$i + 1]) && $path[$i + 1] == '+') {
+				continue;
+			}
+
+			// Process this query
 			switch ($query) {
 				case '>':
 					$matchMode = 1;
 					break;
 				case '+':
 					$matchMode = 2;
-					$buffer = $path[++$i];
 					break;
 				default:
 					$searchSet = $resultSet;
@@ -126,9 +144,9 @@ class Query
 							if ($matchMode == 1 && $this->match($child, $query)) {
 								$resultSet[] = $child;
 							}
-							//if ($matchMode == 2 && $this->plusModeMatch($child, $query)) {
-							//	$resultSet[] = $child;
-							//}
+							if ($matchMode == 2 && $this->plusModeMatch($child, $query, $path[$i - 2])) {
+								$resultSet[] = $child;
+							}
 						}
 					}
 					$matchMode = 0;

@@ -76,6 +76,10 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$result = $query->run($root);
 		$this->assertEquals(array($p3), $result);
 
+		$query = new TestableQuery("html body h1");
+		$result = $query->run($root);
+		$this->assertEquals(array($h1), $result);
+
 		// Selector magic
 
 		$query = new TestableQuery("html > title");
@@ -92,6 +96,6 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$query = new TestableQuery("html body h1 + p");
 		$result = $query->run($root);
-		//$this->assertEquals(array($p1), $result);
+		$this->assertEquals(array($p1), $result);
 	}
 }
