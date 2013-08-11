@@ -45,7 +45,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array("html", "+", "title"), $result);
 	}
 
-	public function test_MatchPath() {
+	public function test_runPath() {
 
 		$root = PureTree::buildRoot('html', array(), '');
 		$head = $root->createChild("head", array(), '');
@@ -57,35 +57,39 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$p3 = $p2->createChild("p", array(), '');
 
 		$query = new TestableQuery("html");
-		$result = $query->match($root);
+		$result = $query->run($root);
 		$this->assertTrue($result);
 
-		/*$query = new TestableQuery("html title");
-		$result = $query->match($root);
-		$this->assertTrue($result);
-
-		$query = new TestableQuery("html > title");
-		$result = $query->match($root);
-		$this->assertFalse($result);
-
-		$query = new TestableQuery("html > head");
-		$result = $query->match($root);
-		$this->assertTrue($result);
-
-		$query = new TestableQuery("html > head > title");
-		$result = $query->match($root);
+		$query = new TestableQuery("p");
+		$result = $query->run($root);
 		$this->assertTrue($result);
 
 		$query = new TestableQuery("html title");
-		$result = $query->match($root);
+		$result = $query->run($root);
+		$this->assertTrue($result);
+
+		/*$query = new TestableQuery("html > title");
+		$result = $query->run($root);
+		$this->assertFalse($result);
+
+		$query = new TestableQuery("html > head");
+		$result = $query->run($root);
+		$this->assertTrue($result);
+
+		$query = new TestableQuery("html > head > title");
+		$result = $query->run($root);
+		$this->assertTrue($result);
+
+		$query = new TestableQuery("html title");
+		$result = $query->run($root);
 		$this->assertTrue($result);
 
 		$query = new TestableQuery("html html");
-		$result = $query->match($root);
+		$result = $query->run($root);
 		$this->assertFalse($result);
 
 		$query = new TestableQuery("p p");
-		$result = $query->match($root);
+		$result = $query->run($root);
 		$this->assertTrue($result);*/
 	}
 }

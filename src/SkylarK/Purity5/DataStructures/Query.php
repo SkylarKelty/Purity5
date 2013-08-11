@@ -69,21 +69,62 @@ class Query
 	}
 
 	/**
-	 * Match two paths, if the first path appears anywhere in the second path
+	 * Search a tree for a given element
 	 */
-	protected function matchPath($tree) {
-		$path = $this->_query_path;
-
+	private function search($tree, $elem) {
+		$results = array();
+		if ($tree->name() == $elem) {
+			$results[] = $tree;
+		}
+		foreach ($tree->children() as $child) {
+			$results = array_merge($results, $this->search($child, $elem));
+		}
+		return $results;
 	}
 
 	/**
-	 * Match an object against this query
+	 * Match two paths, if the first path appears anywhere in the second path
+	 */
+	private function matchPath($tree, $path) {
+		// Search the tree for everything that matches the first element
+		$searchSet = $this->search($tree, array_shift($path));
+		if (empty($searchSet)) {
+			return false;
+		}
+
+		// If we have no path left, then we won
+		if (empty($path)) {
+			return true;
+		}
+
+		// Okay we have a start
+		while (!empty($path)) {
+			$elem = array_shift($path);
+			switch ($elem) {
+				case '+':
+					break;
+				case '>':
+					break;
+				default:
+					// Search the search sets
+					$results = array();
+					foreach ($searchSet as $branch) {
+						$results = array_merge($results, $this->search($branch, $elem));
+					}
+					$searchSet = $results;
+			}
+		}
+
+		return !empty($searchSet);
+	}
+
+	/**
+	 * Run this query against an object
 	 * 
 	 * @param  PureTree $tree The tree to match
-	 * 
-	 * @return boolean        The result (true if there was a match)
+	 * @return array The result set
 	 */
-	public function match(PureTree $tree) {
-		return $this->matchPath($tree);
+	public function run(PureTree $tree) {
+		return $this->matchPath($tree, $this->_query_path);
 	}
 }
