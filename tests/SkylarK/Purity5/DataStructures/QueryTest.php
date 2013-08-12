@@ -51,11 +51,11 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$head = $root->createChild("head", array(), '');
 		$title = $head->createChild("title", array(), '');
 		$body = $root->createChild("body", array(), '');
-		$h1 = $body->createChild("h1", array(), '');
+		$h1 = $body->createChild("h1", array("class" => "ipsum"), '');
 		$p1 = $body->createChild("p", array("id" => "example"), '');
 		$p2 = $body->createChild("p", array("class" => "example lorum"), '');
 		$p3 = $p2->createChild("p", array("class" => "lorum"), '');
-		$p4 = $p2->createChild("p", array(), '');
+		$p4 = $p2->createChild("p", array("class" => "ipsum"), '');
 
 		$query = new TestableQuery("html");
 		$result = $query->run($root);
@@ -150,5 +150,13 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("* .lorum");
 		$result = $query->run($root);
 		$this->assertEquals(array($p2, $p3), $result);
+
+		$query = new TestableQuery("p.ipsum");
+		$result = $query->run($root);
+		$this->assertEquals(array($p4), $result);
+
+		$query = new TestableQuery("body > h1.ipsum");
+		$result = $query->run($root);
+		$this->assertEquals(array($h1), $result);
 	}
 }

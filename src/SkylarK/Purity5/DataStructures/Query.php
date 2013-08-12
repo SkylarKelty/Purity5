@@ -72,23 +72,33 @@ class Query
 	 * Match two elements
 	 */
 	private function match($tree, $query) {
-		if ($query[0] == '#' || $query[0] == '.') {
-			// We're selecting
-			$attrs = $tree->attributes();
-			if ($query[0] == '#') {
-				// Is there an id?
-				return isset($attrs['id']) && $attrs['id'] == substr($query, 1);
+		$name = $tree->name();
+		$attrs = $tree->attributes();
+
+		// Do we contain a #?
+		if (strpos($query, "#") !== false) {
+			list($elem, $id) = explode("#", $query);
+
+			if (!isset($attrs['id']) || (!empty($elem) && $name != $elem)) {
+				return false;
 			}
-			if ($query[0] == '.') {
-				// Is there a class?
-				if (!isset($attrs['class'])) {
-					return false;
-				}
-				$classes = explode(" ", $attrs['class']);
-				return in_array(substr($query, 1), $classes);
-			}
+
+			return $id == $attrs['id'];
 		}
-		return $query == '*' || $tree->name() == $query;
+
+		// Do we contain a .?
+		if (strpos($query, ".") !== false) {
+			list($elem, $class) = explode(".", $query);
+
+			if (!isset($attrs['class']) || (!empty($elem) && $name != $elem)) {
+				return false;
+			}
+
+			$classes = explode(" ", $attrs['class']);
+			return in_array($class, $classes);
+		}
+
+		return $query == '*' || $name == $query;
 	}
 
 	/**
