@@ -88,8 +88,23 @@ class Query
 			$attr_selects = explode(",", $attr_select);
 			foreach ($attr_selects as $attr_select) {
 				list($key, $value) = explode("=", $attr_select);
-				if (!isset($attrs[$key]) || $attrs[$key] != $value) {
+				if (!isset($attrs[$key])) {
 					return false;
+				}
+
+				// Support '+'
+				if (strpos($value, "+") !== false) {
+					$allAttrs = explode(" ", $attrs[$key]);
+					$values = explode("+", $value);
+					foreach ($values as $value) {
+						if (!in_array($value, $allAttrs)) {
+							return false;
+						}
+					}
+				} else {
+					if (strpos($attrs[$key], $value) === false) {
+						return false;
+					}
 				}
 			}
 		}
