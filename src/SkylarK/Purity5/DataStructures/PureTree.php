@@ -9,14 +9,18 @@ namespace SkylarK\Purity5\DataStructures;
 
 class PureTree
 {
+	/** Current UID counter */
+	private static $_idCount = 0;
+	/** The ID of this node */
+	private $_id;
+	/** Parent of this node */
+	private $_parent;
 	/** The name of this node */
 	private $_name;
 	/** Attributes of this node */
 	private $_attributes;
 	/** The contents of this node */
 	private $_contents;
-	/** Parent of this node */
-	private $_parent;
 	/** Children of this node */
 	private $_children;
 	/** Node's path in the doc */
@@ -31,6 +35,7 @@ class PureTree
 	 * @param string $contents The HTML contents of this element
 	 */
 	private function __construct($parent, $name, $attributes = array(), $contents = '') {
+		$this->_id = PureTree::$_idCount++;
 		$this->_parent = $parent;
 		$this->_name = $name;
 		$this->_attributes = $attributes;
@@ -59,6 +64,13 @@ class PureTree
 	 */
 	public static function buildRoot($name = 'html', $attrs = array(), $contents = '') {
 		return new PureTree(null, $name, $attrs, $contents);
+	}
+
+	/**
+	 * Return the id of this element
+	 */
+	public function id() {
+		return $this->_id;
 	}
 
 	/**
@@ -131,27 +143,12 @@ class PureTree
 	 * @param string $query The query to validate against
 	 */
 	public function query($query) {
-		$result = $this->_query(new Query($query));
+		$query = new Query($query);
+		$result = $query->run($this);
 		$len = count($result);
 		if ($len == 0) {
 			return null;
 		}
 		return $len == 1 ? $result[0] : $result;
-	}
-
-	/**
-	 * Recursive query function (internal version)
-	 *
-	 * @param Query $query The query to validate against
-	 */
-	private function _query(Query $query) {
-		$result = array();
-		if ($query->match($this)) {
-			$result[] = $this;
-		}
-		foreach ($this->_children as $child) {
-			$result = array_merge($result, $child->_query($query));
-		}
-		return $result;
 	}
 }
