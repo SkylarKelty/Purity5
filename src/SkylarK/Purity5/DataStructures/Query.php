@@ -88,14 +88,20 @@ class Query
 
 		// Do we contain a .?
 		if (strpos($query, ".") !== false) {
-			list($elem, $class) = explode(".", $query);
+			$arr = explode(".", $query);
+			$elem = array_shift($arr);
 
 			if (!isset($attrs['class']) || (!empty($elem) && $name != $elem)) {
 				return false;
 			}
 
 			$classes = explode(" ", $attrs['class']);
-			return in_array($class, $classes);
+			foreach ($arr as $class) {
+				if (!in_array($class, $classes)) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 		return $query == '*' || $name == $query;
