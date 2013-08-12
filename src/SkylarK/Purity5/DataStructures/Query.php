@@ -80,6 +80,20 @@ class Query
 			return true;
 		}
 
+		// Do we have an attribute selector?
+		if (strpos($query, "[") !== false) {
+			$attr_select = substr($query, strpos($query, "["), strpos($query, "]"));
+			$query = str_replace($attr_select, "", $query);
+			$attr_select = substr($attr_select, 1, -1);
+			$attr_selects = explode(",", $attr_select);
+			foreach ($attr_selects as $attr_select) {
+				list($key, $value) = explode("=", $attr_select);
+				if (!isset($attrs[$key]) || $attrs[$key] != $value) {
+					return false;
+				}
+			}
+		}
+
 		// Do we have a colon selector?
 		if (strpos($query, ":") !== false) {
 			list($query, $selector) = explode(":", $query);

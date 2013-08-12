@@ -55,7 +55,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$p1 = $body->createChild("p", array("id" => "example"), '');
 		$p2 = $body->createChild("p", array("class" => "example lorum"), '');
 		$p3 = $p2->createChild("p", array("class" => "lorum"), '');
-		$p4 = $p2->createChild("p", array("class" => "ipsum"), '');
+		$p4 = $p2->createChild("p", array("class" => "ipsum", "data-select" => "me"), '');
 
 		$query = new TestableQuery("html");
 		$result = $query->run($root);
@@ -210,5 +210,17 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("body p:nth-child(odd)");
 		$result = $query->run($root);
 		$this->assertEquals(array($p1, $p4), $result);
+
+		$query = new TestableQuery("body p[data-select=me]");
+		$result = $query->run($root);
+		$this->assertEquals(array($p4), $result);
+
+		$query = new TestableQuery("p[data-select=me]");
+		$result = $query->run($root);
+		$this->assertEquals(array($p4), $result);
+
+		$query = new TestableQuery("p[data-select=me,class=ipsum]");
+		$result = $query->run($root);
+		$this->assertEquals(array($p4), $result);
 	}
 }
