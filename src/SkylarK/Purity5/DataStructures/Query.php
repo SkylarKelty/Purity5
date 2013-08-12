@@ -95,6 +95,16 @@ class Query
 						}
 					}
 					break;
+				case "last-child":
+					// Check we are the first child
+					$parent = $tree->parent();
+					if ($parent) {
+						$children = $parent->children();
+						if (end($children) != $tree) {
+							return false;
+						}
+					}
+					break;
 				default:
 					// Invalid selector
 					throw new Exception("Invalid selector: " . $selector);

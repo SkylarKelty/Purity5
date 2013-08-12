@@ -171,6 +171,10 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$result = $query->run($root);
 		$this->assertEquals(array($p3), $result);
 
+		$query = new TestableQuery("p.lorum:first-child");
+		$result = $query->run($root);
+		$this->assertEquals(array($p3), $result);
+
 		$query = new TestableQuery("body *:first-child");
 		$result = $query->run($root);
 		$this->assertEquals(array($h1, $p3), $result);
@@ -178,5 +182,17 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("body > *:first-child");
 		$result = $query->run($root);
 		$this->assertEquals(array($h1), $result);
+
+		$query = new TestableQuery("p:last-child");
+		$result = $query->run($root);
+		$this->assertEquals(array($p2, $p4), $result);
+
+		$query = new TestableQuery("body p:last-child");
+		$result = $query->run($root);
+		$this->assertEquals(array($p2, $p4), $result);
+
+		$query = new TestableQuery("body > p:last-child");
+		$result = $query->run($root);
+		$this->assertEquals(array($p2), $result);
 	}
 }
