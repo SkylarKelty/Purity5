@@ -83,6 +83,13 @@ class Query
 		// Do we have a colon selector?
 		if (strpos($query, ":") !== false) {
 			list($query, $selector) = explode(":", $query);
+
+			// Do we have a bracket?
+			if (strpos($selector, "(") !== false) {
+				list($selector, $value) = explode("(", $selector);
+				$value = substr($value, 0, -1);
+			}
+
 			// Only return false here, follow through the rest of the selectors
 			switch ($selector) {
 				case "first-child":
@@ -105,9 +112,33 @@ class Query
 						}
 					}
 					break;
+				case "nth-child":
+					// Check we are the first child
+					$parent = $tree->parent();
+					if ($parent) {
+						$children = $parent->children();
+						$key = array_search($tree, $children, true);
+						switch ($value) {
+							case "even":
+								if ($key % 2 != 0) {
+									return false;
+								}
+								break;
+							case "odd":
+								if ($key % 2 == 0) {
+									return false;
+								}
+								break;
+							default:
+								if ($key != $value) {
+									return false;
+								}
+						}
+					}
+					break;
 				default:
 					// Invalid selector
-					throw new Exception("Invalid selector: " . $selector);
+					throw new \Exception("Invalid selector: " . $selector);
 					break;
 			}
 		}

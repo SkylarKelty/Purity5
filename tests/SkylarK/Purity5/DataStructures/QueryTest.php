@@ -194,5 +194,21 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("body > p:last-child");
 		$result = $query->run($root);
 		$this->assertEquals(array($p2), $result);
+
+		$query = new TestableQuery("body *:nth-child(0)");
+		$result = $query->run($root);
+		$this->assertEquals(array($h1, $p3), $result);
+
+		$query = new TestableQuery("body p:nth-child(1)");
+		$result = $query->run($root);
+		$this->assertEquals(array($p1, $p4), $result);
+
+		$query = new TestableQuery("body p:nth-child(even)");
+		$result = $query->run($root);
+		$this->assertEquals(array($p2, $p3), $result);
+
+		$query = new TestableQuery("body p:nth-child(odd)");
+		$result = $query->run($root);
+		$this->assertEquals(array($p1, $p4), $result);
 	}
 }
