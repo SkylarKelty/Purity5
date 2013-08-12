@@ -39,9 +39,20 @@
         </div>
 
         <h1>
-<a name="purity5" class="anchor" href="#purity5"><span class="octicon octicon-link"></span></a>Purity5</h1>
+<a name="purity5-" class="anchor" href="#purity5-"><span class="octicon octicon-link"></span></a>Purity5 <a href="https://travis-ci.org/SkylarKelty/Purity5"><img src="https://travis-ci.org/SkylarKelty/Purity5.png?branch=master" alt="Build Status"></a>
+</h1>
 
-<p>Purity5 is a HTML5 parser, with a similar interface to jQuery</p>
+<p>Purity5 is a HTML5 query library, with a similar interface to jQuery.</p>
+
+<p>To use, simply include Purity5 and use like so:</p>
+
+<div class="highlight"><pre><span class="nv">$html</span> <span class="o">=</span> <span class="nx">Purity5</span><span class="o">::</span><span class="na">parse</span><span class="p">(</span><span class="nv">$markup</span><span class="p">);</span>
+<span class="nv">$title</span> <span class="o">=</span> <span class="nv">$html</span><span class="p">(</span><span class="s2">"title"</span><span class="p">);</span>
+<span class="nv">$table_headings</span> <span class="o">=</span> <span class="nv">$html</span><span class="p">(</span><span class="s2">"body table tr th"</span><span class="p">);</span>
+<span class="nv">$first_table_headings</span> <span class="o">=</span> <span class="nv">$html</span><span class="p">(</span><span class="s2">"body table tr th:first-child"</span><span class="p">);</span>
+<span class="nv">$active_links</span> <span class="o">=</span> <span class="nv">$html</span><span class="p">(</span><span class="s2">"body a[class=active]"</span><span class="p">);</span>
+<span class="nv">$active_current_links</span> <span class="o">=</span> <span class="nv">$html</span><span class="p">(</span><span class="s2">"body a[class=active+current]"</span><span class="p">);</span>
+</pre></div>
       </section>
 
     </div>
