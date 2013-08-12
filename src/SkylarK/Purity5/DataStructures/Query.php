@@ -75,7 +75,34 @@ class Query
 		$name = $tree->name();
 		$attrs = $tree->attributes();
 
-		// Do we contain a #?
+		// Our easiest selector
+		if ($query == '*' || $name == $query) {
+			return true;
+		}
+
+		// Do we have a colon selector?
+		if (strpos($query, ":") !== false) {
+			list($query, $selector) = explode(":", $query);
+			// Only return false here, follow through the rest of the selectors
+			switch ($selector) {
+				case "first-child":
+					// Check we are the first child
+					$parent = $tree->parent();
+					if ($parent) {
+						$children = $parent->children();
+						if ($children[0] != $tree) {
+							return false;
+						}
+					}
+					break;
+				default:
+					// Invalid selector
+					throw new Exception("Invalid selector: " . $selector);
+					break;
+			}
+		}
+
+		// Do we have a #?
 		if (strpos($query, "#") !== false) {
 			list($elem, $id) = explode("#", $query);
 
@@ -86,7 +113,7 @@ class Query
 			return $id == $attrs['id'];
 		}
 
-		// Do we contain a .?
+		// Do we have a .?
 		if (strpos($query, ".") !== false) {
 			$arr = explode(".", $query);
 			$elem = array_shift($arr);
@@ -104,6 +131,7 @@ class Query
 			return true;
 		}
 
+		// Here again in case the query was modified
 		return $query == '*' || $name == $query;
 	}
 

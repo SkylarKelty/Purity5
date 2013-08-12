@@ -162,5 +162,21 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("body > p.example.lorum");
 		$result = $query->run($root);
 		$this->assertEquals(array($p2), $result);
+
+		$query = new TestableQuery("p.example.lorum");
+		$result = $query->run($root);
+		$this->assertEquals(array($p2), $result);
+
+		$query = new TestableQuery("p:first-child");
+		$result = $query->run($root);
+		$this->assertEquals(array($p3), $result);
+
+		$query = new TestableQuery("body *:first-child");
+		$result = $query->run($root);
+		$this->assertEquals(array($h1, $p3), $result);
+
+		$query = new TestableQuery("body > *:first-child");
+		$result = $query->run($root);
+		$this->assertEquals(array($h1), $result);
 	}
 }
