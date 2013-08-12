@@ -43,6 +43,9 @@ class QueryTest extends PHPUnit_Framework_TestCase
 
 		$result = $query->call("breakPath", array("html + title"));
 		$this->assertEquals(array("html", "+", "title"), $result);
+
+		$result = $query->call("breakPath", array("html + title[a+b]"));
+		$this->assertEquals(array("html", "+", "title[a+b]"), $result);
 	}
 
 	public function test_runPath() {
@@ -222,6 +225,10 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("p[data-select=me,class=ipsum]");
 		$result = $query->run($root);
 		$this->assertEquals(array($p4), $result);
+
+		$query = new TestableQuery("p[class=ipsum+singleton]");
+		$result = $query->run($root);
+		//$this->assertEquals(array($p4), $result);
 
 		$query = new TestableQuery("p > p[data-select=me,class=ipsum+singleton]:last-child");
 		$result = $query->run($root);

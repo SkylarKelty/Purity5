@@ -42,12 +42,13 @@ class Query
 		$result = array();
 
 		// Breakup
+		$ignoreSplits = false;
 		$buffer = '';
 		$len = strlen($query);
 		for ($i = 0; $i < $len; $i++) {
 			$chr = $query[$i];
 			// Split by > and whitespace
-			if ($chr == '>' || $chr == '+' || $chr == ' ') {
+			if (!$ignoreSplits && ($chr == '>' || $chr == '+' || $chr == ' ')) {
 				if ($buffer !== '') {
 					$result[] = $buffer;
 					$buffer = '';
@@ -56,6 +57,12 @@ class Query
 					$result[] = $chr;
 				}
 				continue;
+			}
+			if ($chr == '[') {
+				$ignoreSplits = true;
+			}
+			if ($chr == ']') {
+				$ignoreSplits = false;
 			}
 			$buffer .= $chr;
 		}
@@ -96,8 +103,8 @@ class Query
 				if (strpos($value, "+") !== false) {
 					$allAttrs = explode(" ", $attrs[$key]);
 					$values = explode("+", $value);
-					foreach ($values as $value) {
-						if (!in_array($value, $allAttrs)) {
+					foreach ($values as $pvalue) {
+						if (!in_array($pvalue, $allAttrs)) {
 							return false;
 						}
 					}
