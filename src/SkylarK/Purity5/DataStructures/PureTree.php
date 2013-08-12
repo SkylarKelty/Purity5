@@ -88,6 +88,21 @@ class PureTree
 	}
 
 	/**
+	 * Shortform of attributes()
+	 */
+	public function attrs() {
+		return $this->attributes();
+	}
+
+	/**
+	 * Returns a single attribute
+	 */
+	public function attr($name) {
+		$attrs = $this->attributes();
+		return isset($attrs[$name]) ? $attrs[$name] : null;
+	}
+
+	/**
 	 * Return the contents of this element
 	 */
 	public function contents() {
