@@ -14,7 +14,7 @@ namespace SkylarK\Purity5;
  *   $title = $html("title");
  *   $table_headings = $html("body table tr th");
  *   $active_links = $html("body a[class=active]");
- *   $active_current_links = $html("body a[class=active+current]");
+ *   $active_current_links = $html("body a[class='active current']");
  */
 class Purity5
 {

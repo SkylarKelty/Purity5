@@ -74,5 +74,9 @@ class PureTreeTest extends PHPUnit_Framework_TestCase
 		// Test the '>' priorities
 		$result = $root->query("body > span");
 		$this->assertEquals(null, $result);
+
+		// Test the '+' priorities
+		$result = $root->query("h1 + p");
+		$this->assertEquals($p1, $result);
 	}
 }
