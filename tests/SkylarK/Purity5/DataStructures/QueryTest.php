@@ -222,5 +222,9 @@ class QueryTest extends PHPUnit_Framework_TestCase
 		$query = new TestableQuery("p[data-select=me,class=ipsum]");
 		$result = $query->run($root);
 		$this->assertEquals(array($p4), $result);
+
+		$query = new TestableQuery("p > p[data-select=me,class=ipsum]:last-child");
+		$result = $query->run($root);
+		$this->assertEquals(array($p4), $result);
 	}
 }
